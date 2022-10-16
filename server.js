@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const fs = require('fs');
+var cors = require('cors')
 
 global.APP_PATH = path.resolve(__dirname);
 global.LOG_FILE = path.resolve(__dirname);
@@ -19,6 +20,8 @@ if (process.argv.indexOf('--seed') !== -1) {
 
 const app = express();
 
+app.use(cors());
+
 require('./api/config/db');
 
 app.use(helmet());
@@ -30,15 +33,7 @@ app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuring CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'POST, GET, DELETE, PUT');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  );
-  next();
-});
+
 
 // Configuring Routes
 app.get('/', (req, res) => {

@@ -44,7 +44,7 @@ class CommonService extends EmailService {
     return hash;
   }
 
-  static generateOtp(sequenceLength = 6) {
+  static generateOtp(sequenceLength = 4) {
     let text = '';
     const possible = '0123456789';
     for (let i = 0; i < sequenceLength; i += 1) {
@@ -72,7 +72,7 @@ class CommonService extends EmailService {
     template = template.replace('{{USERNAME}}', username);
     template = template.replace('{{COMPANY_TAG_LINE}}', '');
     const mailOptions = {
-      from: process.env.SMTP_FROM_EMAIL,
+      from: 'bitwizorg@gmail.com',
       html: template,
       subject: templateObject.subject,
       to: email,

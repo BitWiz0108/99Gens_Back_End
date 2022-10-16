@@ -8,3 +8,4 @@ mongo
 .env
 .env.development
 .env.production
+sendgrid.env

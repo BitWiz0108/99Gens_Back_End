@@ -57,27 +57,28 @@ class AuthController extends CommonService {
             if (!valid) {
               return next(this.MESSAGES.CODE.INVALID_CREDENTIALS);
             }
-            const {
-              firstname,
-              lastname,
-              bio,
-              country,
-              _id: id,
-            } = user;
+            // const {
+            //   firstname,
+            //   lastname,
+            //   bio,
+            //   country,
+            //   _id: id,
+            // } = user;
             return res.json({
               message: this.MESSAGES.AUTH.LOGIN,
               refreshToken,
-              token: that.JwtService.issueToken(
-                id /* eslint no-underscore-dangle: 0 */,
-              ),
-              data: {
-                id,
-                firstname: firstname || '',
-                lastname: lastname || '',
-                bio: bio || '',
-                country: country || '',
-                email,
-              },
+              status: true
+              // token: that.JwtService.issueToken(
+              //   id = 0 ,
+              // ),
+              // data: {
+              //   id,
+              //   firstname: firstname || '',
+              //   lastname: lastname || '',
+              //   bio: bio || '',
+              //   country: country || '',
+              //   email,
+              // },
             });
           },
         );
@@ -124,6 +125,7 @@ class AuthController extends CommonService {
     postBody.email = email;
     postBody.password = password;
     postBody.otp = this.CommonService.generateOtp();
+
     return this.UserModel(postBody)
       .save()
       .then(() => new this.CommonService().reisterEmail(postBody, 'EMAIL VERIFICATION'))
@@ -148,7 +150,7 @@ class AuthController extends CommonService {
   registerVerificationByOtp(req, res, next) {
     return this.UserModel.findOneAndUpdate({
       otp: req.body.otp,
-      hashToken: req.body.hashToken,
+      // hashToken: req.body.hashToken,
     },
     {
       status: true,
