@@ -2,7 +2,8 @@
 class EmailService {
   static smtpConfigOptionsSendgrid() {
     const sgMail = require('@sendgrid/mail');
-    sgMail.setApiKey('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');
+    // sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    sgMail.setApiKey('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');
     return sgMail;
   }
 

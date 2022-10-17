@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 // Requiring Mongoose into the app
 
 // Connected to Mongolab sandbox server
-const dbURI = "mongodb://localhost:27017";
+const dbURI = "mongodb+srv://bitwiz0108:GuidingStar@cluster0.2u1apjt.mongodb.net/?retryWrites=true&w=majority";
+
+
 
 // Create the database connection
 mongoose.Promise = global.Promise;
