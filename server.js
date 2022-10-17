@@ -1,5 +1,5 @@
 require('./api/config/env');
-
+const https = require("https");
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
@@ -50,7 +50,24 @@ app.use((err, req, res, next) => {
 });
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => console.log(`Tplanner app listening on port! ${PORT}`));
+
+// app.listen(PORT, () => console.log(`Tplanner app listening on port! ${PORT}`));
+
+
+// https.createServer(options, app)
+// .listen(3000, function (req, res) {
+//   console.log("Server started at port 3000");
+// });
+
+const options = {
+  cert: fs.readFileSync('./localhost.crt'),
+  key: fs.readFileSync('./localhost.key'),
+};
+
+
+https.createServer(options, app).listen(8080);
+console.log("Server listening on https://localhost:8080/");
+
 
 process.on('uncaughtException', (err) => {
   /* eslint no-console: 0 */
