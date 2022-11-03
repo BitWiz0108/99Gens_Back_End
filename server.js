@@ -51,7 +51,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 8080;
 
 
-// app.listen(PORT, () => console.log(`Tplanner app listening on port! ${PORT}`));
+app.listen(PORT, () => console.log(`Tplanner app listening on port! ${PORT}`));
 
 
 // https.createServer(options, app)
@@ -59,19 +59,19 @@ const PORT = process.env.PORT || 8080;
 //   console.log("Server started at port 3000");
 // });
 
-const options = {
-  cert: fs.readFileSync('./localhost.crt'),
-  key: fs.readFileSync('./localhost.key'),
-};
+// const options = {
+//   cert: fs.readFileSync('./localhost.crt'),
+//   key: fs.readFileSync('./localhost.key'),
+// };
 
 
-https.createServer(options, app).listen(8080);
-console.log("Server listening on https://localhost:8080/");
+// https.createServer(options, app).listen(8080);
+// console.log("Server listening on https://localhost:8080/");
 
 
-process.on('uncaughtException', (err) => {
-  /* eslint no-console: 0 */
-  console.error(err.stack, 'err.stack');
-});
+// process.on('uncaughtException', (err) => {
+//   /* eslint no-console: 0 */
+//   console.error(err.stack, 'err.stack');
+// });
 
 module.exports = app;
