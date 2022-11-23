@@ -228,7 +228,7 @@ class AuthController extends CommonService {
         next(err);
       });
   }
-
+ 
 
   /*
    * @param null
