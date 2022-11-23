@@ -11,6 +11,8 @@ const { UserModel, UserModelMethods } = require('../models');
 /** Importing Constants */
 const MESSAGES = require('../config/message');
 
+let updateEmail;
+
 class AuthController extends CommonService {
   constructor() {
     super();
@@ -137,12 +139,8 @@ class AuthController extends CommonService {
   * @return Json.
   */
   editprofile(req, res, next) {
-    console.log("HeyHeyHey");
     const reqData = req.body;
-    // const role = 'CUSTOMER';
-    console.log("!!!!", reqData);
     const { email, firstname, lastname, zipcode } = reqData;
-    console.log(">>>???<<<", firstname);
     return this.UserModel.findOneAndUpdate(
       {
         isDeleted: false,
@@ -156,16 +154,16 @@ class AuthController extends CommonService {
         zipcode
       },
     )
-    .then((user) => {
-      return res.status(201).json({
-        msg: "This is the original User",
-        status: "success",
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        zipcod: user.zipcode
-      });
-    })
+      .then((user) => {
+        return res.status(201).json({
+          msg: "This is the original User",
+          status: "success",
+          email: user.email,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          zipcod: user.zipcode
+        });
+      })
   }
 
   /*
@@ -175,20 +173,22 @@ class AuthController extends CommonService {
 
   updateemail(req, res, next) {
     const postBody = {};
-    const { email,updated_email, firstname, lastname, zipcode } = req.body;
+    const { email, updated_email, firstname, lastname, zipcode } = req.body;
     let { username } = req.body;
 
     if (!username || username === undefined || username === 'undefined') {
       username = this.CommonService.generateUsernameFromEmail(email);
     }
+    const refreshToken_1 = this.CommonService.generateHash(updated_email);
+
+    updateEmail = updated_email;
+
     postBody.username = username;
     postBody.firstname = firstname;
     postBody.lastname = lastname;
     postBody.email = updated_email;
-    console.log("postBody", postBody);
-    
-    new this.CommonService().updateEmail(postBody, 'EMAIL VERIFICATION')
-
+    postBody.otp = "http://" + req.headers.host + "/api/v1/auth/email_verify/" + refreshToken_1;
+    new this.CommonService().updateEmail(postBody, 'EMAIL VERIFICATION');
     return this.UserModel.findOneAndUpdate(
       {
         isDeleted: false,
@@ -196,16 +196,37 @@ class AuthController extends CommonService {
         email,
       },
       {
-        email: updated_email
+        refreshToken: refreshToken_1
       },
     )
-    .then((user) => {
-      return res.status(201).json({
-        status: "success",
-        email: updated_email
+      .then((user) => {
+        return res.status(201).json({
+          status: "success",
+          email: updated_email
+        })
       });
-    })
-      .catch(err => next(err));
+
+  }
+
+
+  /*
+   * @param null
+   * @return Json.
+   */
+
+  async emailVerification(req, res, next) {
+    if (!req.params.token) return res.status(400).json({ message: "We were unable to find a user for this token." });
+    let okuser = await this.UserModel.findOneAndUpdate(
+      {
+        refreshToken: req.params.token,
+      },
+      {
+        email: updateEmail,
+      })
+      .then(response => res.redirect('http://localhost:8000/profile-credits'))
+      .catch((err) => {
+        next(err);
+      });
   }
 
 

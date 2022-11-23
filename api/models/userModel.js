@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Token = require('./tokenModel');
 const { Schema } = mongoose;
 
 const bcrypt = require('bcrypt-nodejs');
@@ -108,6 +108,15 @@ modelSchema.methods.comparePassword = (password, user, cb) => {
     }
     return cb(null, false);
   });
+};
+
+modelSchema.methods.generateVerificationToken = function() {
+  let payload = {
+      haskToken: hashToken,
+      token: crypto.randomBytes(20).toString('hex')
+  };
+
+  return new Token(payload);
 };
 
 modelSchema.set('toObject', { virtuals: true });

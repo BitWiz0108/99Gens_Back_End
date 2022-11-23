@@ -21,7 +21,8 @@ module.exports = () => {
     refreshToken,
     getprofile,
     editprofile,
-    updateemail
+    updateemail,
+    emailVerification
   } = AuthController;
 
   /** **************************SUMANIX API*********************8 */
@@ -60,6 +61,13 @@ module.exports = () => {
     '/verification',
     otpValidator,
     registerVerificationByOtp.bind(AuthController),
+  );
+
+
+  /** Email-Verification */
+  router.get(
+    '/email_verify/:token',
+    emailVerification.bind(AuthController),
   );
 
   /** Register-Verification */
