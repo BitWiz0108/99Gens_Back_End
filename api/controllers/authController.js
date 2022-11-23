@@ -57,28 +57,11 @@ class AuthController extends CommonService {
             if (!valid) {
               return next(this.MESSAGES.CODE.INVALID_CREDENTIALS);
             }
-            // const {
-            //   firstname,
-            //   lastname,
-            //   bio,
-            //   country,
-            //   _id: id,
-            // } = user;
             return res.json({
               message: this.MESSAGES.AUTH.LOGIN,
               refreshToken,
-              status: true
-              // token: that.JwtService.issueToken(
-              //   id = 0 ,
-              // ),
-              // data: {
-              //   id,
-              //   firstname: firstname || '',
-              //   lastname: lastname || '',
-              //   bio: bio || '',
-              //   country: country || '',
-              //   email,
-              // },
+              status: true,
+              email: user.email
             });
           },
         );
@@ -108,6 +91,124 @@ class AuthController extends CommonService {
     return next(new Error('NO_USER_FOUND'));
   }
 
+
+  /*
+   * @param null
+   * @return Json.
+   */
+  getprofile(req, res, next) {
+    return this.UserModel.findOne(
+      {
+        email: req.body.email
+      },
+      {
+        _id: 1,
+        username: 1,
+        firstname: 1,
+        lastname: 1,
+        email: 1,
+        createdAt: 1,
+        country: 1,
+        bio: 1,
+        zipcode: 1
+      },
+    )
+      .then(response => res.json({
+        data: {
+          status: "success",
+          id: response._id,
+          firstname: response.firstname || ' - ',
+          lastname: response.lastname || ' - ',
+          bio: response.bio || '',
+          country: response.country || ' - ',
+          email: response.email,
+          createdAt: response.createdAt.getFullYear() + "-" + (response.createdAt.getMonth() + 1) + "-" + response.createdAt.getDate(),
+          zipcode: response.zipcode || ' - '
+        },
+      }))
+      .catch((err) => {
+        next(err);
+      });
+  }
+
+
+  /*
+  * @param null
+  * @return Json.
+  */
+  editprofile(req, res, next) {
+    console.log("HeyHeyHey");
+    const reqData = req.body;
+    // const role = 'CUSTOMER';
+    console.log("!!!!", reqData);
+    const { email, firstname, lastname, zipcode } = reqData;
+    console.log(">>>???<<<", firstname);
+    return this.UserModel.findOneAndUpdate(
+      {
+        isDeleted: false,
+        status: true,
+        email,
+      },
+      {
+        lastLogin: Date.now(),
+        firstname,
+        lastname,
+        zipcode
+      },
+    )
+    .then((user) => {
+      return res.status(201).json({
+        msg: "This is the original User",
+        status: "success",
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        zipcod: user.zipcode
+      });
+    })
+  }
+
+  /*
+   * @param null
+   * @return Json.
+   */
+
+  updateemail(req, res, next) {
+    const postBody = {};
+    const { email,updated_email, firstname, lastname, zipcode } = req.body;
+    let { username } = req.body;
+
+    if (!username || username === undefined || username === 'undefined') {
+      username = this.CommonService.generateUsernameFromEmail(email);
+    }
+    postBody.username = username;
+    postBody.firstname = firstname;
+    postBody.lastname = lastname;
+    postBody.email = updated_email;
+    console.log("postBody", postBody);
+    
+    new this.CommonService().updateEmail(postBody, 'EMAIL VERIFICATION')
+
+    return this.UserModel.findOneAndUpdate(
+      {
+        isDeleted: false,
+        status: true,
+        email,
+      },
+      {
+        email: updated_email
+      },
+    )
+    .then((user) => {
+      return res.status(201).json({
+        status: "success",
+        email: updated_email
+      });
+    })
+      .catch(err => next(err));
+  }
+
+
   /*
    * @param null
    * @return Json.
@@ -122,6 +223,12 @@ class AuthController extends CommonService {
     const hash = this.CommonService.generateHash(email);
     postBody.hashToken = hash;
     postBody.username = username;
+
+    postBody.firstname = " ";
+    postBody.lastname = " ";
+    postBody.location = " ";
+    postBody.zipcode = " ";
+
     postBody.email = email;
     postBody.password = password;
     postBody.otp = this.CommonService.generateOtp();
@@ -152,14 +259,14 @@ class AuthController extends CommonService {
       otp: req.body.otp,
       // hashToken: req.body.hashToken,
     },
-    {
-      status: true,
-      otp: '',
-    },
-    {
-      upsert: false,
-      new: true,
-    })
+      {
+        status: true,
+        otp: '',
+      },
+      {
+        upsert: false,
+        new: true,
+      })
       .then((response) => {
         if (!response) {
           return next(new Error('INVALID_OTP'));

@@ -19,6 +19,9 @@ module.exports = () => {
     profile,
     update,
     refreshToken,
+    getprofile,
+    editprofile,
+    updateemail
   } = AuthController;
 
   /** **************************SUMANIX API*********************8 */
@@ -30,6 +33,27 @@ module.exports = () => {
     uniqueEmailValidator,
     register.bind(AuthController),
   );
+
+
+  /** Email Update */
+
+  router.post(
+    '/update_email',
+    updateemail.bind(AuthController),
+  );
+
+    /** Get User Profile Info */
+    router.post(
+      '/get_profile',
+      getprofile.bind(AuthController),
+    );
+
+
+    /** Save Edited User Profile Info */
+    router.post(
+      '/edit_profile',
+      editprofile.bind(AuthController),
+    );
 
   /** Register-Verification */
   router.post(

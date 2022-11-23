@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 // Connected to Mongolab sandbox server
 const dbURI = "mongodb+srv://bitwiz0108:GuidingStar@cluster0.2u1apjt.mongodb.net/?retryWrites=true&w=majority";
 
-
-
 // Create the database connection
 mongoose.Promise = global.Promise;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });

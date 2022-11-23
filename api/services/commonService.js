@@ -63,6 +63,7 @@ class CommonService extends EmailService {
   }
 
   async reisterEmail(postBody) {
+    console.log("Email Sent to", postBody.email);
     const { email, username, otp } = postBody;
     const templateObject = await this.TemplateService.fetch('USER_REGISTER');
     let { template } = templateObject;
@@ -84,6 +85,32 @@ class CommonService extends EmailService {
       );
     });
   }
+
+
+  async updateEmail(postBody) {
+    console.log("Email Sent to", postBody.email);
+    const { email, username, otp } = postBody;
+    const templateObject = await this.TemplateService.fetch('EMAIL_CHANGE');
+    let { template } = templateObject;
+    template = template.replace('{{COMPANY_NAME}}', '');
+    template = template.replace('{{COMPANY_URL}}', '');
+    template = template.replace('{{OTP}}', otp);
+    template = template.replace('{{USERNAME}}', username);
+    template = template.replace('{{COMPANY_TAG_LINE}}', '');
+    const mailOptions = {
+      from: 'bitwizorg@gmail.com',
+      html: template,
+      subject: templateObject.subject,
+      to: email,
+    };
+    return new Promise((resolve, reject) => {
+      this.EmailService.send(mailOptions).then(
+        () => resolve(true),
+        err => reject(err),
+      );
+    });
+  }
+
 }
 
 module.exports = CommonService;
