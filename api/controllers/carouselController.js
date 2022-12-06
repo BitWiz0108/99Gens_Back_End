@@ -81,3 +81,4 @@ class CarouselController {
 }
 
 module.exports = new CarouselController();
+ 
