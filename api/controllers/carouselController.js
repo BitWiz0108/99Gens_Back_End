@@ -77,7 +77,6 @@ class CarouselController {
         .catch((err) => {
             next(err);
         });
-        console.log("Get Saved clled!!!", postBody);
     }
 }
 
