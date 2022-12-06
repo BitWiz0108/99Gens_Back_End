@@ -13,15 +13,23 @@ const modelSchema = new Schema(
       enum: ['USER'],
       default: 'USER',
     },
-    firstname: { type: String,
-    default: "John" },
-    lastname: { type: String,
-    default: "Doe" },
+    firstname: {
+      type: String,
+      default: "John"
+    },
+    lastname: {
+      type: String,
+      default: "Doe"
+    },
     username: { type: String },
-    location: { type: String,
-    default: "San Francisco" },
-    zipcode: { type: String,
-    default: "BH5 DE1" },
+    location: {
+      type: String,
+      default: "San Francisco"
+    },
+    zipcode: {
+      type: String,
+      default: "BH5 DE1"
+    },
     headline: { type: String },
     email: {
       type: String,
@@ -110,10 +118,10 @@ modelSchema.methods.comparePassword = (password, user, cb) => {
   });
 };
 
-modelSchema.methods.generateVerificationToken = function() {
+modelSchema.methods.generateVerificationToken = function () {
   let payload = {
-      haskToken: hashToken,
-      token: crypto.randomBytes(20).toString('hex')
+    haskToken: hashToken,
+    token: crypto.randomBytes(20).toString('hex')
   };
 
   return new Token(payload);
