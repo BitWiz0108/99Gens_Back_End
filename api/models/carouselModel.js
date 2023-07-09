@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 
 const carouselSchema = new Schema(
     {
+        carousel_uID: {
+            type: String,
+            required: true
+        },
         userEmail: {
             type: String,
             required: true

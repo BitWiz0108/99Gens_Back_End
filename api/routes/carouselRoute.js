@@ -7,7 +7,8 @@ module.exports = () => {
   
     const {
         save,
-        get_savedCarousel
+        get_savedCarousel,
+        generateUniqueID
     } = CarouselController;
   
     /** **************************SUMANIX API*********************8 */
@@ -21,6 +22,11 @@ module.exports = () => {
     router.post(
       '/get_saved',
       get_savedCarousel.bind(CarouselController),
+    );
+
+    router.post(
+      '/generateUniqueID',
+      generateUniqueID.bind(CarouselController),
     );
   
     return router;
